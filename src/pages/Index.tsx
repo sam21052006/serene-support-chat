@@ -43,7 +43,7 @@ export default function Index() {
               
               <h1 className="text-4xl md:text-6xl font-bold text-foreground leading-tight animate-fade-in">
                 Find Peace with{" "}
-                <span className="text-gradient">MindfulAI</span>
+                <span className="text-gradient">psybot</span>
               </h1>
               
               <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-in">
@@ -78,7 +78,7 @@ export default function Index() {
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                How MindfulAI Helps You
+                How psybot Helps You
               </h2>
               <p className="text-muted-foreground max-w-xl mx-auto">
                 Designed with your mental wellbeing in mind
@@ -127,7 +127,7 @@ export default function Index() {
                       Start Your Wellness Journey Today
                     </h3>
                     <p className="text-primary-foreground/80">
-                      Take the first step towards better mental health. MindfulAI is here to support you every step of the way.
+                      Take the first step towards better mental health. psybot is here to support you every step of the way.
                     </p>
                   </div>
                   <Link to={user ? "/chat" : "/auth"}>
@@ -148,7 +148,7 @@ export default function Index() {
         {/* Footer */}
         <footer className="py-8 border-t border-border/50">
           <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-            <p>MindfulAI is a supportive companion, not a replacement for professional mental health care.</p>
+            <p>psybot is a supportive companion, not a replacement for professional mental health care.</p>
             <p className="mt-2">If you're in crisis, please contact a mental health professional or call a crisis helpline.</p>
           </div>
         </footer>

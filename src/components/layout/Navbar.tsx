@@ -24,7 +24,7 @@ export function Navbar() {
             <div className="w-8 h-8 rounded-lg gradient-calm flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-sm">M</span>
             </div>
-            <span className="font-semibold text-foreground">MindfulAI</span>
+            <span className="font-semibold text-foreground">psybot</span>
           </Link>
 
           <div className="flex items-center gap-1">
