@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Tracker - psybot</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">M</div>
+                <span>psybot</span>
+            </a>
+            <div class="nav-links">
+                <a href="chat.html" class="nav-link">Chat</a>
+                <a href="mood.html" class="nav-link active">Mood</a>
+                <button id="logout-btn" class="btn btn-secondary" onclick="logout()">Sign Out</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mood Tracker -->
+    <main class="mood-page">
+        <div class="container">
+            <div class="mood-header">
+                <h1>How are you feeling?</h1>
+                <p>Track your emotions to understand your mental wellness patterns</p>
+            </div>
+
+            <!-- Mood Selector -->
+            <div class="mood-card">
+                <h2>Select Your Mood</h2>
+                <div class="mood-selector">
+                    <button class="mood-btn" data-mood="very_sad" onclick="selectMood('very_sad')">
+                        <span class="mood-emoji">😢</span>
+                        <span class="mood-label">Very Sad</span>
+                    </button>
+                    <button class="mood-btn" data-mood="sad" onclick="selectMood('sad')">
+                        <span class="mood-emoji">😔</span>
+                        <span class="mood-label">Sad</span>
+                    </button>
+                    <button class="mood-btn" data-mood="neutral" onclick="selectMood('neutral')">
+                        <span class="mood-emoji">😐</span>
+                        <span class="mood-label">Neutral</span>
+                    </button>
+                    <button class="mood-btn" data-mood="happy" onclick="selectMood('happy')">
+                        <span class="mood-emoji">😊</span>
+                        <span class="mood-label">Happy</span>
+                    </button>
+                    <button class="mood-btn" data-mood="very_happy" onclick="selectMood('very_happy')">
+                        <span class="mood-emoji">😄</span>
+                        <span class="mood-label">Very Happy</span>
+                    </button>
+                </div>
+
+                <div class="mood-notes">
+                    <label for="mood-notes">Add a note (optional)</label>
+                    <textarea id="mood-notes" placeholder="What's contributing to this feeling?"></textarea>
+                </div>
+
+                <button id="save-mood-btn" class="btn btn-primary btn-full" onclick="saveMood()" disabled>
+                    Save Mood Entry
+                </button>
+            </div>
+
+            <!-- Mood History -->
+            <div class="mood-card">
+                <h2>Recent Entries</h2>
+                <div id="mood-history" class="mood-history">
+                    <p class="loading">Loading your mood history...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script src="js/mood.js"></script>
+</body>
+</html>
