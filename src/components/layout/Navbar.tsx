@@ -22,9 +22,9 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg gradient-calm flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">M</span>
+              <span className="text-primary-foreground font-bold text-sm">S</span>
             </div>
-            <span className="font-semibold text-foreground">psybot</span>
+            <span className="font-semibold text-foreground">serene</span>
           </Link>
 
           <div className="flex items-center gap-1">
