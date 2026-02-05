@@ -127,8 +127,7 @@ export default function Chat() {
                   Welcome to Your Safe Space
                 </h2>
                 <p className="text-muted-foreground max-w-sm">
-                  I'm MindfulAI, your compassionate companion. Share what's on your mind, 
-                  and I'll do my best to support you.
+                  I'm Serene Support Chat, your compassionate companion. Share what's on your mind, and I'll do my best to support you.
                 </p>
                 <div className="mt-6 flex flex-wrap justify-center gap-2">
                   {["How are you feeling today?", "I need some advice", "Help me calm down"].map(prompt => <button key={prompt} onClick={() => sendMessage(prompt)} className="px-4 py-2 rounded-full bg-secondary text-secondary-foreground text-sm hover:bg-secondary/80 transition-colors">
