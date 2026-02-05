@@ -9,7 +9,7 @@ const features = [
   {
     icon: MessageCircle,
     title: "Compassionate Chat",
-    description: "Talk to MindfulAI anytime. Get supportive, non-judgmental responses and coping strategies.",
+    description: "Talk to serene anytime. Get supportive, non-judgmental responses and coping strategies.",
   },
   {
     icon: BarChart3,
