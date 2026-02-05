@@ -163,7 +163,7 @@
 
   .text-gradient {
     @apply bg-clip-text text-transparent;
-    background: var(--gradient-calm);
+    background-image: var(--gradient-calm);
   }
 }
 
