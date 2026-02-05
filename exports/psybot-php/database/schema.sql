@@ -1,11 +1,11 @@
 -- ============================================
--- PSYBOT - Mental Health Companion
+-- Serene - Mental Health Companion
 -- MySQL Database Schema for XAMPP
 -- ============================================
 
 -- Create the database
-CREATE DATABASE IF NOT EXISTS psybot_db;
-USE psybot_db;
+CREATE DATABASE IF NOT EXISTS serene_db;
+USE serene_db;
 
 -- ============================================
 -- USERS TABLE

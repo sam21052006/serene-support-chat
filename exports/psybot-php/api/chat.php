@@ -80,7 +80,7 @@ function generateAIResponse($message, $history) {
     $lowerMessage = strtolower($message);
     
     $responses = [
-        'hello' => "Hello! I'm psybot, your mental wellness companion. How are you feeling today?",
+        'hello' => "Hello! I'm Serene, your mental wellness companion. How are you feeling today?",
         'hi' => "Hi there! I'm here to listen and support you. What's on your mind?",
         'sad' => "I'm sorry to hear you're feeling sad. It's okay to feel this way. Would you like to talk about what's troubling you?",
         'anxious' => "Anxiety can be really challenging. Try taking some deep breaths - inhale for 4 counts, hold for 4, exhale for 4. Would you like some more coping strategies?",

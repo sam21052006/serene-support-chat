@@ -1,4 +1,4 @@
-# PSYBOT - Mental Health Companion (PHP/MySQL Version)
+# Serene - Mental Health Companion (PHP/MySQL Version)
 
 A compassionate AI companion for mental health support and mood tracking, built with PHP and MySQL for XAMPP.
 
@@ -16,9 +16,9 @@ A compassionate AI companion for mental health support and mood tracking, built 
 ### Step 2: Create Database
 1. Open phpMyAdmin: http://localhost/phpmyadmin
 2. Click **"New"** to create a database
-3. Enter database name: `psybot_db`
+3. Enter database name: `serene_db`
 4. Click **"Create"**
-5. Select the `psybot_db` database
+5. Select the `serene_db` database
 6. Go to **"SQL"** tab
 7. Copy the contents of `database/schema.sql` and paste it
 8. Click **"Go"** to run the SQL
@@ -26,8 +26,8 @@ A compassionate AI companion for mental health support and mood tracking, built 
 ### Step 3: Copy Files
 1. Navigate to your XAMPP installation folder
 2. Go to `htdocs` folder
-3. Create a new folder called `psybot`
-4. Copy ALL files from this folder into `htdocs/psybot`
+3. Create a new folder called `serene`
+4. Copy ALL files from this folder into `htdocs/serene`
 
 ### Step 4: Configure Database (if needed)
 If your MySQL has a password, edit `config/database.php`:
@@ -38,13 +38,13 @@ define('DB_PASS', 'your_password_here');
 ### Step 5: Access the App
 Open your browser and go to:
 ```
-http://localhost/psybot
+http://localhost/serene
 ```
 
 ## 📁 Project Structure
 
 ```
-psybot/
+serene/
 ├── api/                    # Backend PHP APIs
 │   ├── auth.php           # Authentication (login, register, logout)
 │   ├── chat.php           # Chat functionality
@@ -79,7 +79,7 @@ psybot/
 ## 🔐 Features
 
 - **User Authentication**: Register, login, logout
-- **Chat**: Talk with AI companion (rule-based responses)
+- **Chat**: Talk with Serene AI companion (rule-based responses)
 - **Mood Tracking**: Log and view mood history
 - **Crisis Detection**: Detects concerning keywords and shows help resources
 
@@ -143,4 +143,4 @@ psybot/
 
 ---
 
-Built for educational purposes. If you're in crisis, please contact a mental health professional.
+Built for educational purposes. Serene is a supportive companion - if you're in crisis, please contact a mental health professional.

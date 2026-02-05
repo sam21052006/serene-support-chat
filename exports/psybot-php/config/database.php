@@ -5,7 +5,7 @@
  */
 
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'psybot_db');
+define('DB_NAME', 'serene_db');
 define('DB_USER', 'root');        // Default XAMPP username
 define('DB_PASS', '');            // Default XAMPP password (empty)
 
