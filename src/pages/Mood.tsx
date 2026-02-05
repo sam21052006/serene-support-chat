@@ -155,7 +155,7 @@ export default function Mood() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="h-5 w-5 text-primary" />
-                Your Mood Journey
+                Your Mood Graph 
               </CardTitle>
               <CardDescription>
                 Track your emotional patterns over the past 30 days
