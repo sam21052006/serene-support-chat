@@ -126,7 +126,7 @@ export default function Chat() {
                 <h2 className="text-xl font-semibold text-foreground mb-2">
                   Welcome to Your Safe Space
                 </h2>
-                <p className="text-muted-foreground max-w-sm">
+                <p className="max-w-sm text-stone-950">
                   I'm Serene Support Chat, your compassionate companion. Share what's on your mind, and I'll do my best to support you.
                 </p>
                 <div className="mt-6 flex flex-wrap justify-center gap-2">
