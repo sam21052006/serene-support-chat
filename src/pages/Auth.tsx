@@ -102,27 +102,32 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen gradient-soft flex flex-col">
-      <div className="p-4">
+    <div className="min-h-screen flex flex-col">
+      {/* Dark hero background */}
+      <div className="absolute inset-0 gradient-hero" />
+      <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 30% 40%, hsl(225 80% 55% / 0.2) 0%, transparent 50%)' }} />
+      
+      <div className="p-4 relative z-10">
         <Link to="/">
-          <Button variant="ghost" size="sm" className="gap-2">
+          <Button variant="ghost" size="sm" className="gap-2" style={{ color: 'hsl(220 20% 75%)' }}>
             <ArrowLeft className="h-4 w-4" />
             Back to Home
           </Button>
         </Link>
       </div>
 
-      <div className="flex-1 flex items-center justify-center p-4">
-        <Card variant="elevated" className="w-full max-w-md animate-fade-in">
-          <CardHeader className="text-center space-y-4">
-            <div className="w-16 h-16 rounded-2xl gradient-calm flex items-center justify-center mx-auto shadow-glow">
+      <div className="flex-1 flex items-center justify-center p-4 relative z-10">
+        <Card variant="elevated" className="w-full max-w-md animate-fade-in shadow-elevated border-border/30 overflow-hidden">
+          <div className="h-1 gradient-calm" />
+          <CardHeader className="text-center space-y-4 pt-8">
+            <div className="w-18 h-18 rounded-2xl gradient-calm flex items-center justify-center mx-auto shadow-glow animate-glow-pulse p-4">
               <Sparkles className="h-8 w-8 text-primary-foreground" />
             </div>
             <div>
-              <CardTitle className="text-2xl">
+              <CardTitle className="text-2xl font-serif">
                 {isLogin ? "Welcome Back" : "Create Account"}
               </CardTitle>
-              <CardDescription className="mt-2">
+              <CardDescription className="mt-2 text-base">
                 {isLogin
                   ? "Sign in to continue your wellness journey"
                   : "Start your journey to better mental health"}
@@ -130,7 +135,7 @@ export default function Auth() {
             </div>
           </CardHeader>
 
-          <CardContent>
+          <CardContent className="pb-8">
             <form onSubmit={handleSubmit} className="space-y-4">
               {!isLogin && (
                 <div className="space-y-2">
@@ -192,7 +197,7 @@ export default function Auth() {
                 type="submit"
                 variant="calm"
                 size="lg"
-                className="w-full"
+                className="w-full shadow-glow"
                 disabled={loading}
               >
                 {loading ? "Please wait..." : isLogin ? "Sign In" : "Create Account"}
