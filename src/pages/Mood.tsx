@@ -1,15 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Loader2, Plus, TrendingUp, Calendar } from "lucide-react";
+import { Loader2, TrendingUp, Calendar } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/layout/Navbar";
-import { MoodSelector, getMoodEmoji, getMoodLabel } from "@/components/mood/MoodSelector";
+import { getMoodEmoji, getMoodLabel } from "@/components/mood/MoodSelector";
 import { MoodChart } from "@/components/mood/MoodChart";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
-import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 type MoodType = "very_sad" | "sad" | "neutral" | "happy" | "very_happy";
 interface MoodEntry {
@@ -20,19 +18,12 @@ interface MoodEntry {
 }
 export default function Mood() {
   const [entries, setEntries] = useState<MoodEntry[]>([]);
-  const [selectedMood, setSelectedMood] = useState<MoodType | undefined>();
-  const [notes, setNotes] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
-  const [showForm, setShowForm] = useState(false);
   const {
     user,
     loading: authLoading
   } = useAuth();
   const navigate = useNavigate();
-  const {
-    toast
-  } = useToast();
   useEffect(() => {
     if (!authLoading && !user) {
       navigate("/auth");
@@ -60,37 +51,7 @@ export default function Mood() {
       setIsLoading(false);
     }
   };
-  const saveMood = async () => {
-    if (!user || !selectedMood) return;
-    setIsSaving(true);
-    try {
-      const {
-        error
-      } = await supabase.from("mood_entries").insert({
-        user_id: user.id,
-        mood: selectedMood,
-        notes: notes || null
-      });
-      if (error) throw error;
-      toast({
-        title: "Mood logged!",
-        description: "Keep tracking to see patterns over time."
-      });
-      setSelectedMood(undefined);
-      setNotes("");
-      setShowForm(false);
-      fetchEntries();
-    } catch (error) {
-      console.error("Error saving mood:", error);
-      toast({
-        title: "Couldn't save mood",
-        description: "Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsSaving(false);
-    }
-  };
+  
   if (authLoading || isLoading) {
     return <div className="min-h-screen gradient-soft flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -110,43 +71,40 @@ export default function Mood() {
             </p>
           </div>
 
-          {/* Log Mood Card */}
-          <Card variant="elevated" className="animate-fade-in">
+          {/* Today's Mood from Chat */}
+          {todayEntry && <Card variant="elevated" className="animate-fade-in">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="flex items-center gap-2">
                     <Calendar className="h-5 w-5 text-primary" />
-                    Today's Check-in
+                    Today's Mood
                   </CardTitle>
                   <CardDescription>
-                    {todayEntry ? `You logged feeling ${getMoodLabel(todayEntry.mood as MoodType).toLowerCase()} today` : "How are you feeling today?"}
+                    Auto-detected from your chat: feeling {getMoodLabel(todayEntry.mood as MoodType).toLowerCase()}
                   </CardDescription>
                 </div>
-                {todayEntry && !showForm && <div className="text-4xl">{getMoodEmoji(todayEntry.mood as MoodType)}</div>}
+                <div className="text-4xl">{getMoodEmoji(todayEntry.mood as MoodType)}</div>
               </div>
             </CardHeader>
+          </Card>}
+
+          {!todayEntry && <Card variant="elevated" className="animate-fade-in">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Calendar className="h-5 w-5 text-primary" />
+                Today's Mood
+              </CardTitle>
+              <CardDescription>
+                Start a chat to automatically detect your mood
+              </CardDescription>
+            </CardHeader>
             <CardContent>
-              {showForm || !todayEntry ? <div className="space-y-6">
-                  <MoodSelector selected={selectedMood} onSelect={setSelectedMood} />
-                  
-                  {selectedMood && <div className="space-y-4 animate-fade-in">
-                      <Textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="What's contributing to this feeling? (optional)" className="min-h-[100px]" />
-                      <div className="flex gap-2">
-                        <Button variant="calm" onClick={saveMood} disabled={isSaving} className="flex-1">
-                          {isSaving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Plus className="h-4 w-4 mr-2" />}
-                          Save Mood
-                        </Button>
-                        {showForm && <Button variant="ghost" onClick={() => setShowForm(false)}>
-                            Cancel
-                          </Button>}
-                      </div>
-                    </div>}
-                </div> : <Button variant="secondary" onClick={() => setShowForm(true)} className="w-full">
-                  ​Current Mood   
-                </Button>}
+              <Button variant="calm" onClick={() => navigate("/chat")} className="w-full">
+                Start Chatting
+              </Button>
             </CardContent>
-          </Card>
+          </Card>}
 
           {/* Mood Chart */}
           <Card variant="elevated" className="animate-fade-in" style={{
