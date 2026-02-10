@@ -16,6 +16,24 @@ function detectCrisis(message: string): boolean {
   return CRISIS_KEYWORDS.some(keyword => lowerMessage.includes(keyword));
 }
 
+function detectMood(message: string): string | null {
+  const lower = message.toLowerCase();
+
+  const veryHappyWords = ["amazing", "fantastic", "thrilled", "ecstatic", "overjoyed", "elated", "wonderful", "incredible", "so happy", "best day", "love life", "on top of the world"];
+  const happyWords = ["happy", "good", "great", "fine", "okay", "positive", "grateful", "thankful", "excited", "joyful", "cheerful", "content", "pleased", "glad", "enjoying", "smile", "hopeful", "optimistic", "better"];
+  const sadWords = ["sad", "unhappy", "down", "blue", "disappointed", "upset", "crying", "miss", "lonely", "heartbroken", "gloomy", "miserable", "hurt", "pain", "lost", "empty", "numb", "tired of"];
+  const verySadWords = ["hopeless", "despair", "devastated", "worthless", "hate myself", "can't go on", "unbearable", "broken", "shattered", "agonizing", "terrible", "worst", "rock bottom", "give up"];
+  const anxiousWords = ["anxious", "stressed", "worried", "nervous", "panic", "overwhelmed", "fear", "scared", "tense", "restless", "uneasy", "dread", "pressure", "can't sleep", "insomnia", "burnout", "exhausted", "frustrated", "angry", "irritated"];
+
+  if (verySadWords.some(w => lower.includes(w))) return "very_sad";
+  if (veryHappyWords.some(w => lower.includes(w))) return "very_happy";
+  if (sadWords.some(w => lower.includes(w))) return "sad";
+  if (anxiousWords.some(w => lower.includes(w))) return "neutral";
+  if (happyWords.some(w => lower.includes(w))) return "happy";
+
+  return null;
+}
+
 const CRISIS_RESPONSE = `I'm deeply concerned about what you've shared, and I want you to know that you're not alone. Your life matters, and there are people who want to help.
 
 **Please reach out to a crisis helpline immediately:**
@@ -43,13 +61,15 @@ serve(async (req) => {
     // Check for crisis in the latest user message
     const latestUserMessage = messages.filter((m: any) => m.role === "user").pop();
     const isCrisis = latestUserMessage && detectCrisis(latestUserMessage.content);
+    const detectedMood = latestUserMessage ? detectMood(latestUserMessage.content) : null;
 
     if (isCrisis) {
       console.log("Crisis detected - returning crisis response");
       return new Response(
         JSON.stringify({ 
           content: CRISIS_RESPONSE,
-          isCrisis: true 
+          isCrisis: true,
+          detectedMood: "very_sad"
         }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
@@ -112,10 +132,10 @@ When asked for advice, you can search for and suggest relevant self-help resourc
     const data = await response.json();
     const content = data.choices?.[0]?.message?.content || "I'm here to listen. How can I support you today?";
 
-    console.log("Chat response generated successfully");
+    console.log("Chat response generated successfully, detected mood:", detectedMood);
     
     return new Response(
-      JSON.stringify({ content, isCrisis: false }),
+      JSON.stringify({ content, isCrisis: false, detectedMood }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error) {

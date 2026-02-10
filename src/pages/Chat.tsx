@@ -81,6 +81,16 @@ export default function Chat() {
         content: data.content,
         is_crisis_alert: data.isCrisis
       });
+
+      // Auto-log mood if detected from chat
+      if (data.detectedMood) {
+        await supabase.from("mood_entries").insert({
+          user_id: user.id,
+          mood: data.detectedMood,
+          notes: `Auto-detected from chat: "${content.substring(0, 80)}${content.length > 80 ? '...' : ''}"`
+        });
+      }
+
       if (data.isCrisis) {
         toast({
           title: "We're here for you",
