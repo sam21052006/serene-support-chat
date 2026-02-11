@@ -73,85 +73,46 @@ export default {
   		},
   		fontFamily: {
   			sans: [
-  				'Inter',
+  				'Plus Jakarta Sans',
+  				'DM Sans',
   				'ui-sans-serif',
   				'system-ui',
   				'-apple-system',
-  				'BlinkMacSystemFont',
-  				'Segoe UI',
-  				'Roboto',
-  				'Helvetica Neue',
-  				'Arial',
-  				'Noto Sans',
   				'sans-serif'
   			],
   			serif: [
-  				'Lora',
+  				'DM Sans',
   				'ui-serif',
   				'Georgia',
-  				'Cambria',
-  				'Times New Roman',
-  				'Times',
   				'serif'
   			],
   			mono: [
-  				'Space Mono',
+  				'JetBrains Mono',
   				'ui-monospace',
   				'SFMono-Regular',
-  				'Menlo',
-  				'Monaco',
-  				'Consolas',
-  				'Liberation Mono',
-  				'Courier New',
   				'monospace'
   			]
   		},
   		keyframes: {
   			'accordion-down': {
-  				from: {
-  					height: '0'
-  				},
-  				to: {
-  					height: 'var(--radix-accordion-content-height)'
-  				}
+  				from: { height: '0' },
+  				to: { height: 'var(--radix-accordion-content-height)' }
   			},
   			'accordion-up': {
-  				from: {
-  					height: 'var(--radix-accordion-content-height)'
-  				},
-  				to: {
-  					height: '0'
-  				}
+  				from: { height: 'var(--radix-accordion-content-height)' },
+  				to: { height: '0' }
   			},
   			'fade-in': {
-  				from: {
-  					opacity: '0',
-  					transform: 'translateY(10px)'
-  				},
-  				to: {
-  					opacity: '1',
-  					transform: 'translateY(0)'
-  				}
+  				from: { opacity: '0', transform: 'translateY(10px)' },
+  				to: { opacity: '1', transform: 'translateY(0)' }
   			},
   			'slide-in': {
-  				from: {
-  					opacity: '0',
-  					transform: 'translateX(-10px)'
-  				},
-  				to: {
-  					opacity: '1',
-  					transform: 'translateX(0)'
-  				}
+  				from: { opacity: '0', transform: 'translateX(-10px)' },
+  				to: { opacity: '1', transform: 'translateX(0)' }
   			},
   			'scale-in': {
-  				from: {
-  					opacity: '0',
-  					transform: 'scale(0.95)'
-  				},
-  				to: {
-  					opacity: '1',
-  					transform: 'scale(1)'
-  				}
+  				from: { opacity: '0', transform: 'scale(0.95)' },
+  				to: { opacity: '1', transform: 'scale(1)' }
   			}
   		},
   		animation: {
