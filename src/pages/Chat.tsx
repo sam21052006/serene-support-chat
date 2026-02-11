@@ -136,11 +136,11 @@ export default function Chat() {
                 <h2 className="text-xl font-semibold text-foreground mb-2">
                   Welcome to Your Safe Space
                 </h2>
-                <p className="max-w-sm text-stone-950">
+                <p className="max-w-sm text-muted-foreground">
                   I'm Serene Support Chat, your compassionate companion. Share what's on your mind, and I'll do my best to support you.
                 </p>
                 <div className="mt-6 flex flex-wrap justify-center gap-2">
-                  {["How are you feeling today?", "I need some advice", "Help me calm down"].map(prompt => <button key={prompt} onClick={() => sendMessage(prompt)} className="px-4 py-2 rounded-full text-secondary-foreground text-sm transition-colors bg-foreground">
+                  {["How are you feeling today?", "I need some advice", "Help me calm down"].map(prompt => <button key={prompt} onClick={() => sendMessage(prompt)} className="px-4 py-2 rounded-full text-primary-foreground text-sm font-medium transition-all duration-200 gradient-calm hover:shadow-glow hover:scale-105">
                       {prompt}
                     </button>)}
                 </div>
