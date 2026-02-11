@@ -4,30 +4,24 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Navbar } from "@/components/layout/Navbar";
 import { useAuth } from "@/hooks/useAuth";
-
-const features = [
-  {
-    icon: MessageCircle,
-    title: "Compassionate Chat",
-    description: "Talk to Serene anytime. Get supportive, non-judgmental responses and coping strategies.",
-  },
-  {
-    icon: BarChart3,
-    title: "Mood Tracking",
-    description: "Track your emotional journey over time. Visualize patterns and gain insights into your wellbeing.",
-  },
-  {
-    icon: Shield,
-    title: "Crisis Support",
-    description: "Automatic detection of crisis situations with immediate access to professional resources.",
-  },
-];
-
+const features = [{
+  icon: MessageCircle,
+  title: "Compassionate Chat",
+  description: "Talk to Serene anytime. Get supportive, non-judgmental responses and coping strategies."
+}, {
+  icon: BarChart3,
+  title: "Mood Tracking",
+  description: "Track your emotional journey over time. Visualize patterns and gain insights into your wellbeing."
+}, {
+  icon: Shield,
+  title: "Crisis Support",
+  description: "Automatic detection of crisis situations with immediate access to professional resources."
+}];
 export default function Index() {
-  const { user } = useAuth();
-
-  return (
-    <div className="min-h-screen">
+  const {
+    user
+  } = useAuth();
+  return <div className="min-h-screen">
       <Navbar />
       
       <main>
@@ -35,7 +29,9 @@ export default function Index() {
         <section className="relative overflow-hidden gradient-hero min-h-[90vh] flex items-center">
           {/* Decorative orbs */}
           <div className="absolute top-1/4 -left-20 w-72 h-72 rounded-full bg-primary/15 blur-[100px] animate-float" />
-          <div className="absolute bottom-1/4 -right-20 w-96 h-96 rounded-full bg-secondary/10 blur-[120px] animate-float" style={{ animationDelay: "2s" }} />
+          <div className="absolute bottom-1/4 -right-20 w-96 h-96 rounded-full bg-secondary/10 blur-[120px] animate-float" style={{
+          animationDelay: "2s"
+        }} />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 blur-[150px]" />
           
           <div className="container mx-auto px-4 py-20 relative z-10">
@@ -45,12 +41,16 @@ export default function Index() {
                 Your Mental Wellness Companion
               </div>
               
-              <h1 className="text-5xl md:text-7xl font-bold leading-tight animate-fade-in" style={{ color: 'hsl(0 0% 100%)' }}>
+              <h1 className="text-5xl md:text-7xl font-bold leading-tight animate-fade-in" style={{
+              color: 'hsl(0 0% 100%)'
+            }}>
                 Find Your{" "}
                 <span className="text-gradient-gold italic">Inner Peace</span>
               </h1>
               
-              <p className="text-lg md:text-xl max-w-2xl mx-auto animate-fade-in leading-relaxed" style={{ color: 'hsl(220 20% 75%)' }}>
+              <p className="text-lg md:text-xl max-w-2xl mx-auto animate-fade-in leading-relaxed" style={{
+              color: 'hsl(220 20% 75%)'
+            }}>
                 A compassionate AI companion that listens, supports, and helps you navigate life's challenges. 
                 Track your mood, get personalized advice, and build healthier mental habits.
               </p>
@@ -63,7 +63,9 @@ export default function Index() {
                   </Button>
                 </Link>
                 <Link to="/mood">
-                  <Button variant="glass" size="xl" className="gap-3 w-full sm:w-auto text-base px-8 border-primary/30 hover:border-primary/50" style={{ color: 'hsl(220 20% 85%)' }}>
+                  <Button variant="glass" size="xl" className="gap-3 w-full sm:w-auto px-8 text-xl border-sidebar-foreground border-dotted border rounded-md shadow" style={{
+                  color: 'hsl(220 20% 85%)'
+                }}>
                     <BarChart3 className="h-5 w-5" />
                     Track Your Mood
                   </Button>
@@ -92,13 +94,9 @@ export default function Index() {
             </div>
 
             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-              {features.map((feature, index) => (
-                <Card
-                  key={feature.title}
-                  variant="elevated"
-                  className="group hover:shadow-glow transition-all duration-500 animate-fade-in border-border/50 hover:-translate-y-1"
-                  style={{ animationDelay: `${index * 0.15}s` }}
-                >
+              {features.map((feature, index) => <Card key={feature.title} variant="elevated" className="group hover:shadow-glow transition-all duration-500 animate-fade-in border-border/50 hover:-translate-y-1" style={{
+              animationDelay: `${index * 0.15}s`
+            }}>
                   <CardContent className="p-8 text-center space-y-5">
                     <div className="w-16 h-16 rounded-2xl gradient-calm flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-500 shadow-glow">
                       <feature.icon className="h-8 w-8 text-primary-foreground" />
@@ -110,8 +108,7 @@ export default function Index() {
                       {feature.description}
                     </p>
                   </CardContent>
-                </Card>
-              ))}
+                </Card>)}
             </div>
           </div>
         </section>
@@ -122,7 +119,9 @@ export default function Index() {
             <Card variant="gradient" className="max-w-4xl mx-auto overflow-hidden shadow-elevated">
               <div className="gradient-calm p-10 md:p-16 relative overflow-hidden">
                 {/* Subtle pattern overlay */}
-                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, hsl(40 80% 55% / 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 50%, hsl(260 60% 55% / 0.2) 0%, transparent 50%)' }} />
+                <div className="absolute inset-0 opacity-10" style={{
+                backgroundImage: 'radial-gradient(circle at 20% 50%, hsl(40 80% 55% / 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 50%, hsl(260 60% 55% / 0.2) 0%, transparent 50%)'
+              }} />
                 
                 <div className="flex flex-col md:flex-row items-center gap-10 relative z-10">
                   <div className="flex-1 text-center md:text-left">
@@ -140,11 +139,7 @@ export default function Index() {
                     </p>
                   </div>
                   <Link to={user ? "/chat" : "/auth"}>
-                    <Button
-                      variant="glass"
-                      size="xl"
-                      className="bg-primary-foreground/20 text-primary-foreground border-primary-foreground/30 hover:bg-primary-foreground/30 text-base px-8"
-                    >
+                    <Button variant="glass" size="xl" className="bg-primary-foreground/20 text-primary-foreground border-primary-foreground/30 hover:bg-primary-foreground/30 text-base px-8">
                       {user ? "Open Chat" : "Sign Up Free"}
                     </Button>
                   </Link>
@@ -162,6 +157,5 @@ export default function Index() {
           </div>
         </footer>
       </main>
-    </div>
-  );
+    </div>;
 }
