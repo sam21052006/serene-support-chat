@@ -90,6 +90,7 @@ export default function Chat() {
           notes: `Auto-detected from chat: "${content.substring(0, 80)}${content.length > 80 ? '...' : ''}"`
         });
       }
+
       if (data.isCrisis) {
         toast({
           title: "We're here for you",
@@ -127,7 +128,47 @@ export default function Chat() {
           </div>
 
           {/* Messages */}
-          
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            {messages.length === 0 && <div className="h-full flex flex-col items-center justify-center text-center p-8">
+                <div className="w-16 h-16 rounded-2xl gradient-calm flex items-center justify-center mb-4">
+                  <span className="text-3xl">💙</span>
+                </div>
+                <h2 className="text-xl font-semibold text-foreground mb-2">
+                  Welcome to Your Safe Space
+                </h2>
+                <p className="max-w-sm text-stone-950">
+                  I'm Serene Support Chat, your compassionate companion. Share what's on your mind, and I'll do my best to support you.
+                </p>
+                <div className="mt-6 flex flex-wrap justify-center gap-2">
+                  {["How are you feeling today?", "I need some advice", "Help me calm down"].map(prompt => <button key={prompt} onClick={() => sendMessage(prompt)} className="px-4 py-2 rounded-full text-secondary-foreground text-sm transition-colors bg-foreground">
+                      {prompt}
+                    </button>)}
+                </div>
+              </div>}
+
+            {messages.map(message => <ChatMessage key={message.id} role={message.role} content={message.content} isCrisis={message.isCrisis} />)}
+
+            {isLoading && <div className="flex gap-3">
+                <div className="w-8 h-8 rounded-full gradient-calm flex items-center justify-center">
+                  <Loader2 className="h-4 w-4 animate-spin text-primary-foreground" />
+                </div>
+                <div className="bg-card rounded-2xl px-4 py-3 shadow-soft">
+                  <div className="flex gap-1">
+                    <span className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce" style={{
+                  animationDelay: "0ms"
+                }} />
+                    <span className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce" style={{
+                  animationDelay: "150ms"
+                }} />
+                    <span className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce" style={{
+                  animationDelay: "300ms"
+                }} />
+                  </div>
+                </div>
+              </div>}
+
+            <div ref={messagesEndRef} />
+          </div>
 
           {/* Crisis Alert Banner */}
           {messages.some(m => m.isCrisis) && <div className="mx-4 mb-2 p-3 rounded-lg bg-crisis/10 border border-crisis/30 flex items-center gap-2">

@@ -1,145 +1,161 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Loader2, TrendingUp, Calendar, MessageCircle } from "lucide-react";
+import { Loader2, Plus, TrendingUp, Calendar } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/layout/Navbar";
-import { getMoodEmoji, getMoodLabel } from "@/components/mood/MoodSelector";
+import { MoodSelector, getMoodEmoji, getMoodLabel } from "@/components/mood/MoodSelector";
 import { MoodChart } from "@/components/mood/MoodChart";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
-
 type MoodType = "very_sad" | "sad" | "neutral" | "happy" | "very_happy";
-
 interface MoodEntry {
   id: string;
   mood: MoodType;
   notes: string | null;
   created_at: string;
 }
-
 export default function Mood() {
   const [entries, setEntries] = useState<MoodEntry[]>([]);
+  const [selectedMood, setSelectedMood] = useState<MoodType | undefined>();
+  const [notes, setNotes] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const { user, loading: authLoading } = useAuth();
+  const [isSaving, setIsSaving] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const {
+    user,
+    loading: authLoading
+  } = useAuth();
   const navigate = useNavigate();
-
+  const {
+    toast
+  } = useToast();
   useEffect(() => {
-    if (!authLoading && !user) navigate("/auth");
+    if (!authLoading && !user) {
+      navigate("/auth");
+    }
   }, [user, authLoading, navigate]);
-
   useEffect(() => {
-    if (user) fetchEntries();
+    if (user) {
+      fetchEntries();
+    }
   }, [user]);
-
   const fetchEntries = async () => {
     if (!user) return;
     try {
-      const { data, error } = await supabase
-        .from("mood_entries")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(30);
+      const {
+        data,
+        error
+      } = await supabase.from("mood_entries").select("*").eq("user_id", user.id).order("created_at", {
+        ascending: false
+      }).limit(30);
       if (error) throw error;
-      setEntries((data as MoodEntry[]) || []);
+      setEntries(data as MoodEntry[] || []);
     } catch (error) {
       console.error("Error fetching mood entries:", error);
     } finally {
       setIsLoading(false);
     }
   };
-
+  const saveMood = async () => {
+    if (!user || !selectedMood) return;
+    setIsSaving(true);
+    try {
+      const {
+        error
+      } = await supabase.from("mood_entries").insert({
+        user_id: user.id,
+        mood: selectedMood,
+        notes: notes || null
+      });
+      if (error) throw error;
+      toast({
+        title: "Mood logged!",
+        description: "Keep tracking to see patterns over time."
+      });
+      setSelectedMood(undefined);
+      setNotes("");
+      setShowForm(false);
+      fetchEntries();
+    } catch (error) {
+      console.error("Error saving mood:", error);
+      toast({
+        title: "Couldn't save mood",
+        description: "Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
   if (authLoading || isLoading) {
-    return (
-      <div className="min-h-screen gradient-soft flex items-center justify-center">
+    return <div className="min-h-screen gradient-soft flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+      </div>;
   }
-
-  const todayEntry = entries.find(
-    (e) => format(new Date(e.created_at), "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd")
-  );
-
-  return (
-    <div className="min-h-screen gradient-soft">
+  const todayEntry = entries.find(e => format(new Date(e.created_at), "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd"));
+  return <div className="min-h-screen gradient-soft">
       <Navbar />
-
-      <main className="pt-20 pb-12 px-4 max-w-4xl mx-auto">
-        <div className="space-y-8">
+      
+      <main className="pt-20 pb-8 px-4 max-w-4xl mx-auto">
+        <div className="space-y-6">
           {/* Header */}
-          <div className="text-center space-y-3 pt-4">
-            <p className="text-sm font-semibold tracking-widest uppercase text-secondary">
-              Insights
-            </p>
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground font-serif">
-              Mood Tracker
-            </h1>
-            <p className="text-muted-foreground text-lg max-w-md mx-auto">
+          <div className="text-center space-y-2">
+            <h1 className="text-3xl font-bold text-foreground">Mood Tracker</h1>
+            <p className="text-muted-foreground">
               Understanding your emotions is the first step to wellness
             </p>
           </div>
 
-          {/* Today's Mood from Chat */}
-          {todayEntry ? (
-            <Card variant="elevated" className="animate-fade-in shadow-elevated border-border/30 overflow-hidden">
-              <div className="h-1 gradient-calm" />
-              <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="flex items-center gap-2">
-                      <Calendar className="h-5 w-5 text-primary" />
-                      Today's Mood
-                    </CardTitle>
-                    <CardDescription className="mt-1">
-                      Auto-detected from your chat: feeling{" "}
-                      <span className="font-semibold text-foreground">
-                        {getMoodLabel(todayEntry.mood as MoodType).toLowerCase()}
-                      </span>
-                    </CardDescription>
-                  </div>
-                  <div className="text-5xl animate-float">{getMoodEmoji(todayEntry.mood as MoodType)}</div>
+          {/* Log Mood Card */}
+          <Card variant="elevated" className="animate-fade-in">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <Calendar className="h-5 w-5 text-primary" />
+                    Today's Check-in
+                  </CardTitle>
+                  <CardDescription>
+                    {todayEntry ? `You logged feeling ${getMoodLabel(todayEntry.mood as MoodType).toLowerCase()} today` : "How are you feeling today?"}
+                  </CardDescription>
                 </div>
-              </CardHeader>
-            </Card>
-          ) : (
-            <Card variant="elevated" className="animate-fade-in shadow-elevated border-border/30 overflow-hidden">
-              <div className="h-1 gradient-gold" />
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 font-serif">
-                  <Calendar className="h-5 w-5 text-secondary" />
-                  Today's Mood
-                </CardTitle>
-                <CardDescription className="text-base">
-                  Start a conversation to automatically detect your mood
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button
-                  variant="calm"
-                  onClick={() => navigate("/chat")}
-                  className="w-full gap-2 shadow-glow"
-                >
-                  <MessageCircle className="h-4 w-4" />
-                  Start Chatting
-                </Button>
-              </CardContent>
-            </Card>
-          )}
+                {todayEntry && !showForm && <div className="text-4xl">{getMoodEmoji(todayEntry.mood as MoodType)}</div>}
+              </div>
+            </CardHeader>
+            <CardContent>
+              {showForm || !todayEntry ? <div className="space-y-6">
+                  <MoodSelector selected={selectedMood} onSelect={setSelectedMood} />
+                  
+                  {selectedMood && <div className="space-y-4 animate-fade-in">
+                      <Textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="What's contributing to this feeling? (optional)" className="min-h-[100px]" />
+                      <div className="flex gap-2">
+                        <Button variant="calm" onClick={saveMood} disabled={isSaving} className="flex-1">
+                          {isSaving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Plus className="h-4 w-4 mr-2" />}
+                          Save Mood
+                        </Button>
+                        {showForm && <Button variant="ghost" onClick={() => setShowForm(false)}>
+                            Cancel
+                          </Button>}
+                      </div>
+                    </div>}
+                </div> : <Button variant="secondary" onClick={() => setShowForm(true)} className="w-full">
+                  ​Current Mood   
+                </Button>}
+            </CardContent>
+          </Card>
 
           {/* Mood Chart */}
-          <Card
-            variant="elevated"
-            className="animate-fade-in shadow-elevated border-border/30 overflow-hidden"
-            style={{ animationDelay: "0.1s" }}
-          >
-            <div className="h-1 gradient-calm" />
+          <Card variant="elevated" className="animate-fade-in" style={{
+          animationDelay: "0.1s"
+        }}>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 font-serif">
+              <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="h-5 w-5 text-primary" />
-                Your Mood Journey
+                Your Mood Graph 
               </CardTitle>
               <CardDescription>
                 Track your emotional patterns over the past 30 days
@@ -151,47 +167,34 @@ export default function Mood() {
           </Card>
 
           {/* Recent Entries */}
-          {entries.length > 0 && (
-            <Card
-              variant="elevated"
-              className="animate-fade-in shadow-elevated border-border/30 overflow-hidden"
-              style={{ animationDelay: "0.2s" }}
-            >
-              <div className="h-1 gradient-gold" />
+          {entries.length > 0 && <Card variant="flat" className="animate-fade-in" style={{
+          animationDelay: "0.2s"
+        }}>
               <CardHeader>
-                <CardTitle className="font-serif">Recent Entries</CardTitle>
+                <CardTitle>Recent Entries</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {entries.slice(0, 7).map((entry) => (
-                    <div
-                      key={entry.id}
-                      className="flex items-start gap-4 p-4 rounded-xl bg-accent/50 border border-border/30 hover:shadow-soft transition-all duration-300"
-                    >
-                      <span className="text-3xl">{getMoodEmoji(entry.mood as MoodType)}</span>
+                  {entries.slice(0, 7).map(entry => <div key={entry.id} className="flex items-start gap-4 p-3 rounded-lg bg-secondary/50">
+                      <span className="text-2xl">{getMoodEmoji(entry.mood as MoodType)}</span>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
-                          <span className="font-semibold text-foreground">
+                          <span className="font-medium text-foreground">
                             {getMoodLabel(entry.mood as MoodType)}
                           </span>
-                          <span className="text-xs text-muted-foreground font-medium">
+                          <span className="text-xs text-muted-foreground">
                             {format(new Date(entry.created_at), "MMM d, h:mm a")}
                           </span>
                         </div>
-                        {entry.notes && (
-                          <p className="text-sm text-muted-foreground mt-1.5 truncate">
+                        {entry.notes && <p className="text-sm text-muted-foreground mt-1 truncate">
                             {entry.notes}
-                          </p>
-                        )}
+                          </p>}
                       </div>
-                    </div>
-                  ))}
+                    </div>)}
                 </div>
               </CardContent>
-            </Card>
-          )}
+            </Card>}
         </div>
       </main>
-    </div>
-  );
+    </div>;
 }

@@ -73,21 +73,36 @@ export default {
   		},
   		fontFamily: {
   			sans: [
-  				'DM Sans',
+  				'Inter',
   				'ui-sans-serif',
   				'system-ui',
   				'-apple-system',
+  				'BlinkMacSystemFont',
+  				'Segoe UI',
+  				'Roboto',
+  				'Helvetica Neue',
+  				'Arial',
+  				'Noto Sans',
   				'sans-serif'
   			],
   			serif: [
-  				'Playfair Display',
+  				'Lora',
   				'ui-serif',
   				'Georgia',
+  				'Cambria',
+  				'Times New Roman',
+  				'Times',
   				'serif'
   			],
   			mono: [
   				'Space Mono',
   				'ui-monospace',
+  				'SFMono-Regular',
+  				'Menlo',
+  				'Monaco',
+  				'Consolas',
+  				'Liberation Mono',
+  				'Courier New',
   				'monospace'
   			]
   		},
@@ -111,7 +126,7 @@ export default {
   			'fade-in': {
   				from: {
   					opacity: '0',
-  					transform: 'translateY(16px)'
+  					transform: 'translateY(10px)'
   				},
   				to: {
   					opacity: '1',
@@ -142,9 +157,9 @@ export default {
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out',
-  			'fade-in': 'fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-  			'slide-in': 'slide-in 0.4s ease-out',
-  			'scale-in': 'scale-in 0.3s ease-out'
+  			'fade-in': 'fade-in 0.5s ease-out',
+  			'slide-in': 'slide-in 0.3s ease-out',
+  			'scale-in': 'scale-in 0.2s ease-out'
   		},
   		boxShadow: {
   			'2xs': 'var(--shadow-2xs)',
