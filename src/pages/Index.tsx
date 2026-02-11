@@ -63,7 +63,7 @@ export default function Index() {
                   </Button>
                 </Link>
                 <Link to="/mood">
-                  <Button variant="glass" size="xl" className="gap-3 w-full sm:w-auto px-8 text-xl border-sidebar-foreground border-dotted border rounded-md shadow" style={{
+                  <Button variant="glass" size="xl" className="gap-3 w-full sm:w-auto px-8 text-xl border-sidebar-foreground border-dotted border rounded-md shadow text-secondary-foreground bg-slate-50" style={{
                   color: 'hsl(220 20% 85%)'
                 }}>
                     <BarChart3 className="h-5 w-5" />
