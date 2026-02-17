@@ -1,7 +1,12 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\exports\\psybot-php\\api",
+    "\\exports\\psybot-php\\config",
+    "\\exports\\psybot-php\\css",
+    "\\exports\\psybot-php\\database",
+    "\\exports\\psybot-php\\js"
   ],
-  "SelectedNode": "\\src",
+  "SelectedNode": "\\tailwind.config.ts",
   "PreviewInSolutionExplorer": false
 }
