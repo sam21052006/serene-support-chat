@@ -85,7 +85,7 @@ export default function Auth() {
         } else {
           toast({
             title: "Account created!",
-            description: "Welcome to MindfulAI. Let's start your wellness journey.",
+            description: "Welcome to Serene. Let's start your wellness journey.",
           });
           navigate("/");
         }
