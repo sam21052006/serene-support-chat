@@ -1,46 +1,65 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { z } from "zod";
-import { Sparkles, Mail, Lock, User, ArrowLeft } from "lucide-react";
+import { Sparkles, Mail, Lock, User, ArrowLeft, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import { Link } from "react-router-dom";
 
-const emailSchema = z.string().email("Please enter a valid email address");
+const emailSchema = z.string().trim().email("Please enter a valid email address");
 const passwordSchema = z.string().min(6, "Password must be at least 6 characters");
+const displayNameSchema = z.string().trim().max(100, "Display name must be under 100 characters").optional();
+
+type AuthMode = "login" | "signup" | "forgot";
 
 export default function Auth() {
-  const [isLogin, setIsLogin] = useState(true);
+  const [mode, setMode] = useState<AuthMode>("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string; displayName?: string }>({});
 
-  const { signIn, signUp, user } = useAuth();
+  const { signIn, signUp, resetPassword, user, isReady } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) {
+    if (isReady && user) {
       navigate("/");
     }
-  }, [user, navigate]);
+  }, [user, isReady, navigate]);
+
+  if (!isReady) {
+    return (
+      <div className="min-h-screen gradient-soft flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   const validateForm = () => {
-    const newErrors: { email?: string; password?: string } = {};
+    const newErrors: typeof errors = {};
 
     const emailResult = emailSchema.safeParse(email);
     if (!emailResult.success) {
       newErrors.email = emailResult.error.errors[0].message;
     }
 
-    const passwordResult = passwordSchema.safeParse(password);
-    if (!passwordResult.success) {
-      newErrors.password = passwordResult.error.errors[0].message;
+    if (mode !== "forgot") {
+      const passwordResult = passwordSchema.safeParse(password);
+      if (!passwordResult.success) {
+        newErrors.password = passwordResult.error.errors[0].message;
+      }
+    }
+
+    if (mode === "signup" && displayName) {
+      const nameResult = displayNameSchema.safeParse(displayName);
+      if (!nameResult.success) {
+        newErrors.displayName = nameResult.error.errors[0].message;
+      }
     }
 
     setErrors(newErrors);
@@ -49,14 +68,20 @@ export default function Auth() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!validateForm()) return;
-
     setLoading(true);
 
     try {
-      if (isLogin) {
-        const { error } = await signIn(email, password);
+      if (mode === "forgot") {
+        const { error } = await resetPassword(email.trim());
+        if (error) {
+          toast({ title: "Reset failed", description: error.message, variant: "destructive" });
+        } else {
+          toast({ title: "Check your email", description: "We've sent you a password reset link." });
+          setMode("login");
+        }
+      } else if (mode === "login") {
+        const { error } = await signIn(email.trim(), password);
         if (error) {
           toast({
             title: "Sign in failed",
@@ -66,14 +91,11 @@ export default function Auth() {
             variant: "destructive",
           });
         } else {
-          toast({
-            title: "Welcome back!",
-            description: "You've successfully signed in.",
-          });
+          toast({ title: "Welcome back!", description: "You've successfully signed in." });
           navigate("/");
         }
       } else {
-        const { error } = await signUp(email, password, displayName);
+        const { error } = await signUp(email.trim(), password, displayName.trim());
         if (error) {
           toast({
             title: "Sign up failed",
@@ -83,22 +105,21 @@ export default function Auth() {
             variant: "destructive",
           });
         } else {
-          toast({
-            title: "Account created!",
-            description: "Welcome to Serene. Let's start your wellness journey.",
-          });
+          toast({ title: "Account created!", description: "Welcome to Serene. Let's start your wellness journey." });
           navigate("/");
         }
       }
     } catch {
-      toast({
-        title: "Something went wrong",
-        description: "Please try again later.",
-        variant: "destructive",
-      });
+      toast({ title: "Something went wrong", description: "Please try again later.", variant: "destructive" });
     } finally {
       setLoading(false);
     }
+  };
+
+  const titles: Record<AuthMode, { title: string; desc: string }> = {
+    login: { title: "Welcome Back", desc: "Sign in to continue your wellness journey" },
+    signup: { title: "Create Account", desc: "Start your journey to better mental health" },
+    forgot: { title: "Reset Password", desc: "Enter your email and we'll send you a reset link" },
   };
 
   return (
@@ -119,20 +140,14 @@ export default function Auth() {
               <Sparkles className="h-8 w-8 text-primary-foreground" />
             </div>
             <div>
-              <CardTitle className="text-2xl">
-                {isLogin ? "Welcome Back" : "Create Account"}
-              </CardTitle>
-              <CardDescription className="mt-2">
-                {isLogin
-                  ? "Sign in to continue your wellness journey"
-                  : "Start your journey to better mental health"}
-              </CardDescription>
+              <CardTitle className="text-2xl">{titles[mode].title}</CardTitle>
+              <CardDescription className="mt-2">{titles[mode].desc}</CardDescription>
             </div>
           </CardHeader>
 
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              {!isLogin && (
+              {mode === "signup" && (
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground">Display Name</label>
                   <div className="relative">
@@ -140,11 +155,16 @@ export default function Auth() {
                     <Input
                       type="text"
                       value={displayName}
-                      onChange={(e) => setDisplayName(e.target.value)}
+                      onChange={(e) => {
+                        setDisplayName(e.target.value);
+                        setErrors((prev) => ({ ...prev, displayName: undefined }));
+                      }}
                       placeholder="How should we call you?"
                       className="pl-10"
+                      maxLength={100}
                     />
                   </div>
+                  {errors.displayName && <p className="text-xs text-destructive">{errors.displayName}</p>}
                 </div>
               )}
 
@@ -163,55 +183,68 @@ export default function Auth() {
                     className="pl-10"
                   />
                 </div>
-                {errors.email && (
-                  <p className="text-xs text-destructive">{errors.email}</p>
-                )}
+                {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">Password</label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="password"
-                    value={password}
-                    onChange={(e) => {
-                      setPassword(e.target.value);
-                      setErrors((prev) => ({ ...prev, password: undefined }));
-                    }}
-                    placeholder="••••••••"
-                    className="pl-10"
-                  />
+              {mode !== "forgot" && (
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">Password</label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      type="password"
+                      value={password}
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                        setErrors((prev) => ({ ...prev, password: undefined }));
+                      }}
+                      placeholder="••••••••"
+                      className="pl-10"
+                    />
+                  </div>
+                  {errors.password && <p className="text-xs text-destructive">{errors.password}</p>}
                 </div>
-                {errors.password && (
-                  <p className="text-xs text-destructive">{errors.password}</p>
-                )}
-              </div>
+              )}
 
-              <Button
-                type="submit"
-                variant="calm"
-                size="lg"
-                className="w-full"
-                disabled={loading}
-              >
-                {loading ? "Please wait..." : isLogin ? "Sign In" : "Create Account"}
+              {mode === "login" && (
+                <button
+                  type="button"
+                  onClick={() => { setMode("forgot"); setErrors({}); }}
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Forgot password?
+                </button>
+              )}
+
+              <Button type="submit" variant="calm" size="lg" className="w-full" disabled={loading}>
+                {loading
+                  ? "Please wait..."
+                  : mode === "login"
+                    ? "Sign In"
+                    : mode === "signup"
+                      ? "Create Account"
+                      : "Send Reset Link"}
               </Button>
             </form>
 
-            <div className="mt-6 text-center">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsLogin(!isLogin);
-                  setErrors({});
-                }}
-                className="text-sm text-muted-foreground hover:text-primary transition-colors"
-              >
-                {isLogin
-                  ? "Don't have an account? Sign up"
-                  : "Already have an account? Sign in"}
-              </button>
+            <div className="mt-6 text-center space-y-2">
+              {mode === "forgot" ? (
+                <button
+                  type="button"
+                  onClick={() => { setMode("login"); setErrors({}); }}
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Back to sign in
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => { setMode(mode === "login" ? "signup" : "login"); setErrors({}); }}
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  {mode === "login" ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
+                </button>
+              )}
             </div>
           </CardContent>
         </Card>
