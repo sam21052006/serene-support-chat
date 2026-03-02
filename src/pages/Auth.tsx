@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { z } from "zod";
-import { Sparkles, Mail, Lock, User, ArrowLeft, Loader2 } from "lucide-react";
+import { Mail, Lock, User, ArrowLeft, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -136,8 +136,8 @@ export default function Auth() {
       <div className="flex-1 flex items-center justify-center p-4">
         <Card variant="elevated" className="w-full max-w-md animate-fade-in">
           <CardHeader className="text-center space-y-4">
-            <div className="w-16 h-16 rounded-2xl gradient-calm flex items-center justify-center mx-auto shadow-glow">
-              <Sparkles className="h-8 w-8 text-primary-foreground" />
+            <div className="w-16 h-16 rounded-2xl overflow-hidden flex items-center justify-center mx-auto shadow-glow">
+              <img src="/logo.png" alt="Serene logo" className="w-full h-full object-cover" />
             </div>
             <div>
               <CardTitle className="text-2xl">{titles[mode].title}</CardTitle>
