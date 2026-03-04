@@ -27,8 +27,8 @@ export function Navbar() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl gradient-calm flex items-center justify-center shadow-lg">
-              <span className="text-lg">​🩵</span>
+            <div className="w-9 h-9 rounded-xl overflow-hidden shadow-lg">
+              <img src="/logo.png" alt="Serene logo" className="w-full h-full object-cover" />
             </div>
             <span className={cn(
               "font-bold text-lg tracking-tight",
