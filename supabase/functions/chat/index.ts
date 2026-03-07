@@ -94,14 +94,16 @@ serve(async (req) => {
     }
 
     const messages = validationResult.data;
-    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
-    
-    if (!OPENAI_API_KEY) {
-      throw new Error("OPENAI_API_KEY is not configured");
+
+    // Check for Lovable AI API key
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) {
+      console.error("LOVABLE_API_KEY is not configured");
+      throw new Error("AI service is not configured");
     }
 
     // Check for crisis in the latest user message
-    const latestUserMessage = messages.filter((m: any) => m.role === "user").pop();
+    const latestUserMessage = messages.filter((m) => m.role === "user").pop();
     const isCrisis = latestUserMessage && detectCrisis(latestUserMessage.content);
     const detectedMood = latestUserMessage ? detectMood(latestUserMessage.content) : null;
 
@@ -135,14 +137,14 @@ Guidelines:
 
 When asked for advice, you can search for and suggest relevant self-help resources, breathing exercises, mindfulness techniques, and general wellness tips.`;
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gpt-4o",
+        model: "google/gemini-2.5-flash",
         messages: [
           { role: "system", content: systemPrompt },
           ...messages,
@@ -162,7 +164,7 @@ When asked for advice, you can search for and suggest relevant self-help resourc
       }
       if (response.status === 402) {
         return new Response(
-          JSON.stringify({ error: "Service temporarily unavailable. Please try again later." }),
+          JSON.stringify({ error: "AI service usage limit reached. Please try again later." }),
           { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
