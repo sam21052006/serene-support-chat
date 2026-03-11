@@ -37,7 +37,7 @@ function detectMood(message: string): string | null {
   if (verySadWords.some(w => lower.includes(w))) return "very_sad";
   if (veryHappyWords.some(w => lower.includes(w))) return "very_happy";
   if (sadWords.some(w => lower.includes(w))) return "sad";
-  if (anxiousWords.some(w => lower.includes(w))) return "neutral";
+  if (anxiousWords.some(w => lower.includes(w))) return "sad";
   if (happyWords.some(w => lower.includes(w))) return "happy";
 
   return null;
