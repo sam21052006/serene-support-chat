@@ -28,16 +28,16 @@ function detectCrisis(message: string): boolean {
 function detectMood(message: string): string | null {
   const lower = message.toLowerCase();
 
-  const veryHappyWords = ["amazing", "fantastic", "thrilled", "ecstatic", "overjoyed", "elated", "wonderful", "incredible", "so happy", "best day", "love life", "on top of the world"];
-  const happyWords = ["happy", "good", "great", "fine", "okay", "positive", "grateful", "thankful", "excited", "joyful", "cheerful", "content", "pleased", "glad", "enjoying", "smile", "hopeful", "optimistic", "better"];
-  const sadWords = ["sad", "unhappy", "down", "blue", "disappointed", "upset", "crying", "miss", "lonely", "heartbroken", "gloomy", "miserable", "hurt", "pain", "lost", "empty", "numb", "tired of"];
-  const verySadWords = ["hopeless", "despair", "devastated", "worthless", "hate myself", "can't go on", "unbearable", "broken", "shattered", "agonizing", "terrible", "worst", "rock bottom", "give up"];
-  const anxiousWords = ["anxious", "stressed", "worried", "nervous", "panic", "overwhelmed", "fear", "scared", "tense", "restless", "uneasy", "dread", "pressure", "can't sleep", "insomnia", "burnout", "exhausted", "frustrated", "angry", "irritated"];
+  const veryHappyWords = ["amazing", "fantastic", "thrilled", "ecstatic", "overjoyed", "elated", "wonderful", "incredible", "so happy", "best day", "love life", "on top of the world", "blessed", "euphoric", "over the moon", "couldn't be happier", "feeling great", "on cloud nine"];
+  const happyWords = ["happy", "good", "great", "fine", "okay", "positive", "grateful", "thankful", "excited", "joyful", "cheerful", "content", "pleased", "glad", "enjoying", "smile", "hopeful", "optimistic", "better", "relieved", "peaceful", "calm", "relaxed", "motivated", "inspired", "proud", "confident", "fulfilled", "satisfied", "delighted", "feeling good", "in a good mood"];
+  const sadWords = ["sad", "unhappy", "down", "blue", "disappointed", "upset", "crying", "miss", "lonely", "heartbroken", "gloomy", "miserable", "hurt", "pain", "lost", "empty", "numb", "tired of", "depressed", "feeling low", "feeling down", "not okay", "not fine", "low mood", "melancholy", "sorrowful", "dejected", "disheartened", "downhearted", "heavy heart", "grief", "mourning", "weeping", "sobbing", "teary", "in tears", "feeling bad", "not happy", "struggling", "suffering"];
+  const verySadWords = ["hopeless", "despair", "devastated", "worthless", "hate myself", "can't go on", "unbearable", "broken", "shattered", "agonizing", "terrible", "worst", "rock bottom", "give up", "deeply depressed", "severe depression", "can't take it", "falling apart", "no hope", "life is over", "nothing matters", "completely lost", "ruined", "destroyed", "crushed", "defeated", "helpless", "powerless", "misery"];
+  const anxiousWords = ["anxious", "stressed", "worried", "nervous", "panic", "overwhelmed", "fear", "scared", "tense", "restless", "uneasy", "dread", "pressure", "can't sleep", "insomnia", "burnout", "exhausted", "frustrated", "angry", "irritated", "freaking out", "on edge", "anxiety", "paranoid", "agitated", "distressed", "troubled", "unsettled", "apprehensive", "overthinking", "racing thoughts", "can't relax", "hyperventilating", "panic attack", "stressed out", "under pressure", "losing it"];
 
   if (verySadWords.some(w => lower.includes(w))) return "very_sad";
   if (veryHappyWords.some(w => lower.includes(w))) return "very_happy";
   if (sadWords.some(w => lower.includes(w))) return "sad";
-  if (anxiousWords.some(w => lower.includes(w))) return "neutral";
+  if (anxiousWords.some(w => lower.includes(w))) return "sad";
   if (happyWords.some(w => lower.includes(w))) return "happy";
 
   return null;
