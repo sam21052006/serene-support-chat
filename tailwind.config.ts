@@ -72,26 +72,8 @@ export default {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		fontFamily: {
-  			sans: [
-  				'Plus Jakarta Sans',
-  				'DM Sans',
-  				'ui-sans-serif',
-  				'system-ui',
-  				'-apple-system',
-  				'sans-serif'
-  			],
-  			serif: [
-  				'DM Sans',
-  				'ui-serif',
-  				'Georgia',
-  				'serif'
-  			],
-  			mono: [
-  				'JetBrains Mono',
-  				'ui-monospace',
-  				'SFMono-Regular',
-  				'monospace'
-  			]
+  			sans: ['system-ui', '-apple-system', 'sans-serif'],
+  			mono: ['ui-monospace', 'SFMono-Regular', 'monospace'],
   		},
   		keyframes: {
   			'accordion-down': {
