@@ -27,14 +27,12 @@ export default function Auth() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isReady && user) {
-      navigate("/");
-    }
+    if (isReady && user) navigate("/");
   }, [user, isReady, navigate]);
 
   if (!isReady) {
     return (
-      <div className="min-h-screen gradient-soft flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
@@ -42,26 +40,16 @@ export default function Auth() {
 
   const validateForm = () => {
     const newErrors: typeof errors = {};
-
     const emailResult = emailSchema.safeParse(email);
-    if (!emailResult.success) {
-      newErrors.email = emailResult.error.errors[0].message;
-    }
-
+    if (!emailResult.success) newErrors.email = emailResult.error.errors[0].message;
     if (mode !== "forgot") {
       const passwordResult = passwordSchema.safeParse(password);
-      if (!passwordResult.success) {
-        newErrors.password = passwordResult.error.errors[0].message;
-      }
+      if (!passwordResult.success) newErrors.password = passwordResult.error.errors[0].message;
     }
-
     if (mode === "signup" && displayName) {
       const nameResult = displayNameSchema.safeParse(displayName);
-      if (!nameResult.success) {
-        newErrors.displayName = nameResult.error.errors[0].message;
-      }
+      if (!nameResult.success) newErrors.displayName = nameResult.error.errors[0].message;
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -86,12 +74,12 @@ export default function Auth() {
           toast({
             title: "Sign in failed",
             description: error.message === "Invalid login credentials"
-              ? "Invalid email or password. Please try again."
+              ? "Invalid email or password."
               : error.message,
             variant: "destructive",
           });
         } else {
-          toast({ title: "Welcome back!", description: "You've successfully signed in." });
+          toast({ title: "Welcome back!" });
           navigate("/");
         }
       } else {
@@ -100,12 +88,12 @@ export default function Auth() {
           toast({
             title: "Sign up failed",
             description: error.message.includes("already registered")
-              ? "This email is already registered. Try signing in instead."
+              ? "This email is already registered."
               : error.message,
             variant: "destructive",
           });
         } else {
-          toast({ title: "Account created!", description: "Welcome to Serene. Let's start your wellness journey." });
+          toast({ title: "Account created!", description: "Welcome to PsyBot." });
           navigate("/");
         }
       }
@@ -117,49 +105,44 @@ export default function Auth() {
   };
 
   const titles: Record<AuthMode, { title: string; desc: string }> = {
-    login: { title: "Welcome Back", desc: "Sign in to continue your wellness journey" },
-    signup: { title: "Create Account", desc: "Start your journey to better mental health" },
-    forgot: { title: "Reset Password", desc: "Enter your email and we'll send you a reset link" },
+    login: { title: "Welcome Back", desc: "Sign in to continue" },
+    signup: { title: "Create Account", desc: "Start your wellness journey" },
+    forgot: { title: "Reset Password", desc: "We'll send you a reset link" },
   };
 
   return (
-    <div className="min-h-screen gradient-soft flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background">
       <div className="p-4">
         <Link to="/">
           <Button variant="ghost" size="sm" className="gap-2">
             <ArrowLeft className="h-4 w-4" />
-            Back to Home
+            Back
           </Button>
         </Link>
       </div>
 
       <div className="flex-1 flex items-center justify-center p-4">
-        <Card variant="elevated" className="w-full max-w-md animate-fade-in">
-          <CardHeader className="text-center space-y-4">
-            <div className="w-16 h-16 rounded-2xl overflow-hidden flex items-center justify-center mx-auto shadow-glow">
-              <img src="/logo.png" alt="Serene logo" className="w-full h-full object-cover" />
-            </div>
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center space-y-3">
+            <img src="/logo.png" alt="Logo" className="w-12 h-12 rounded-lg mx-auto" />
             <div>
-              <CardTitle className="text-2xl">{titles[mode].title}</CardTitle>
-              <CardDescription className="mt-2">{titles[mode].desc}</CardDescription>
+              <CardTitle>{titles[mode].title}</CardTitle>
+              <CardDescription className="mt-1">{titles[mode].desc}</CardDescription>
             </div>
           </CardHeader>
 
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               {mode === "signup" && (
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Display Name</label>
+                <div className="space-y-1">
+                  <label className="text-sm font-medium">Display Name</label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       type="text"
                       value={displayName}
-                      onChange={(e) => {
-                        setDisplayName(e.target.value);
-                        setErrors((prev) => ({ ...prev, displayName: undefined }));
-                      }}
-                      placeholder="How should we call you?"
+                      onChange={(e) => { setDisplayName(e.target.value); setErrors((p) => ({ ...p, displayName: undefined })); }}
+                      placeholder="Your name"
                       className="pl-10"
                       maxLength={100}
                     />
@@ -168,17 +151,14 @@ export default function Auth() {
                 </div>
               )}
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">Email</label>
+              <div className="space-y-1">
+                <label className="text-sm font-medium">Email</label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     type="email"
                     value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      setErrors((prev) => ({ ...prev, email: undefined }));
-                    }}
+                    onChange={(e) => { setEmail(e.target.value); setErrors((p) => ({ ...p, email: undefined })); }}
                     placeholder="you@example.com"
                     className="pl-10"
                   />
@@ -187,17 +167,14 @@ export default function Auth() {
               </div>
 
               {mode !== "forgot" && (
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Password</label>
+                <div className="space-y-1">
+                  <label className="text-sm font-medium">Password</label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       type="password"
                       value={password}
-                      onChange={(e) => {
-                        setPassword(e.target.value);
-                        setErrors((prev) => ({ ...prev, password: undefined }));
-                      }}
+                      onChange={(e) => { setPassword(e.target.value); setErrors((p) => ({ ...p, password: undefined })); }}
                       placeholder="••••••••"
                       className="pl-10"
                     />
@@ -207,41 +184,23 @@ export default function Auth() {
               )}
 
               {mode === "login" && (
-                <button
-                  type="button"
-                  onClick={() => { setMode("forgot"); setErrors({}); }}
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                >
+                <button type="button" onClick={() => { setMode("forgot"); setErrors({}); }} className="text-sm text-muted-foreground hover:text-primary">
                   Forgot password?
                 </button>
               )}
 
-              <Button type="submit" variant="calm" size="lg" className="w-full" disabled={loading}>
-                {loading
-                  ? "Please wait..."
-                  : mode === "login"
-                    ? "Sign In"
-                    : mode === "signup"
-                      ? "Create Account"
-                      : "Send Reset Link"}
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Please wait..." : mode === "login" ? "Sign In" : mode === "signup" ? "Create Account" : "Send Reset Link"}
               </Button>
             </form>
 
-            <div className="mt-6 text-center space-y-2">
+            <div className="mt-4 text-center">
               {mode === "forgot" ? (
-                <button
-                  type="button"
-                  onClick={() => { setMode("login"); setErrors({}); }}
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                >
+                <button type="button" onClick={() => { setMode("login"); setErrors({}); }} className="text-sm text-muted-foreground hover:text-primary">
                   Back to sign in
                 </button>
               ) : (
-                <button
-                  type="button"
-                  onClick={() => { setMode(mode === "login" ? "signup" : "login"); setErrors({}); }}
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                >
+                <button type="button" onClick={() => { setMode(mode === "login" ? "signup" : "login"); setErrors({}); }} className="text-sm text-muted-foreground hover:text-primary">
                   {mode === "login" ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
                 </button>
               )}
