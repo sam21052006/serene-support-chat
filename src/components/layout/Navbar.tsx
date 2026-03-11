@@ -9,85 +9,59 @@ export function Navbar() {
   const { user, signOut } = useAuth();
 
   const navItems = [
-  { path: "/", label: "Home", icon: Home },
-  { path: "/chat", label: "Chat", icon: MessageCircle },
-  { path: "/mood", label: "Mood", icon: BarChart3 }];
-
+    { path: "/", label: "Home", icon: Home },
+    { path: "/chat", label: "Chat", icon: MessageCircle },
+    { path: "/mood", label: "Mood", icon: BarChart3 },
+  ];
 
   const isActive = (path: string) => location.pathname === path;
-  const isHeroPage = location.pathname === "/";
 
   return (
-    <nav className={cn(
-      "fixed top-0 left-0 right-0 z-50 border-b transition-colors duration-300",
-      isHeroPage ?
-      "glass-dark border-white/5" :
-      "glass border-border/50"
-    )}>
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl overflow-hidden shadow-lg">
-              <img src="/logo.png" alt="Serene logo" className="w-full h-full object-cover" />
-            </div>
-            <span className={cn(
-              "font-bold text-lg tracking-tight",
-              isHeroPage ? "text-white" : "text-foreground"
-            )}>Serene</span>
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background border-b">
+      <div className="max-w-5xl mx-auto px-4">
+        <div className="flex items-center justify-between h-14">
+          <Link to="/" className="flex items-center gap-2">
+            <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded-md" />
+            <span className="font-bold text-foreground">PsyBot</span>
           </Link>
 
           <div className="flex items-center gap-1">
-            {navItems.map((item) =>
-            <Link key={item.path} to={item.path}>
+            {navItems.map((item) => (
+              <Link key={item.path} to={item.path}>
                 <Button
-                variant="ghost"
-                size="sm"
-                className={cn(
-                  "gap-2 transition-all duration-200 font-medium",
-                  isHeroPage && "text-white/70 hover:text-white hover:bg-white/10",
-                  isActive(item.path) && (isHeroPage ?
-                  "bg-white/10 text-white" :
-                  "bg-primary/10 text-primary")
-                )}>
-
+                  variant="ghost"
+                  size="sm"
+                  className={cn(
+                    "gap-2",
+                    isActive(item.path) && "bg-primary/10 text-primary"
+                  )}
+                >
                   <item.icon className="h-4 w-4" />
                   <span className="hidden sm:inline">{item.label}</span>
                 </Button>
               </Link>
-            )}
+            ))}
           </div>
 
           <div className="flex items-center gap-2">
-            {user ?
-            <>
-                <div className={cn(
-                "hidden sm:flex items-center gap-2 text-sm",
-                isHeroPage ? "text-white/50" : "text-muted-foreground"
-              )}>
-                  <div className="w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center">
-                    <User className="h-3.5 w-3.5 text-primary" />
-                  </div>
+            {user ? (
+              <>
+                <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground">
+                  <User className="h-4 w-4" />
                   <span className="max-w-[120px] truncate">{user.email}</span>
                 </div>
-                <Button
-                variant="ghost"
-                size="sm"
-                onClick={signOut}
-                className={cn(isHeroPage && "text-white/60 hover:text-white hover:bg-white/10")}>
-
+                <Button variant="ghost" size="sm" onClick={signOut}>
                   <LogOut className="h-4 w-4" />
                 </Button>
-              </> :
-
-            <Link to="/auth">
-                <Button variant="calm" size="sm" className="font-semibold shadow-lg">
-                  Sign In
-                </Button>
+              </>
+            ) : (
+              <Link to="/auth">
+                <Button size="sm">Sign In</Button>
               </Link>
-            }
+            )}
           </div>
         </div>
       </div>
-    </nav>);
-
+    </nav>
+  );
 }
