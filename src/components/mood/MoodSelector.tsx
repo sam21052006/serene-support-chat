@@ -7,12 +7,12 @@ interface MoodSelectorProps {
   onSelect: (mood: MoodType) => void;
 }
 
-const moods: { type: MoodType; emoji: string; label: string; color: string }[] = [
-  { type: "very_sad", emoji: "😢", label: "Very Sad", color: "bg-destructive/20 border-destructive/40" },
-  { type: "sad", emoji: "😔", label: "Sad", color: "bg-crisis/20 border-crisis/40" },
-  { type: "neutral", emoji: "😐", label: "Neutral", color: "bg-muted border-border" },
-  { type: "happy", emoji: "😊", label: "Happy", color: "bg-accent border-accent-foreground/20" },
-  { type: "very_happy", emoji: "😄", label: "Very Happy", color: "bg-success/20 border-success/40" },
+const moods: { type: MoodType; emoji: string; label: string }[] = [
+  { type: "very_sad", emoji: "😢", label: "Very Sad" },
+  { type: "sad", emoji: "😔", label: "Sad" },
+  { type: "neutral", emoji: "😐", label: "Neutral" },
+  { type: "happy", emoji: "😊", label: "Happy" },
+  { type: "very_happy", emoji: "😄", label: "Very Happy" },
 ];
 
 export function MoodSelector({ selected, onSelect }: MoodSelectorProps) {
@@ -23,15 +23,14 @@ export function MoodSelector({ selected, onSelect }: MoodSelectorProps) {
           key={mood.type}
           onClick={() => onSelect(mood.type)}
           className={cn(
-            "flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-200 hover:scale-105",
-            mood.color,
+            "flex flex-col items-center gap-1.5 p-3 rounded-lg border-2 transition-all hover:scale-105",
             selected === mood.type
-              ? "ring-2 ring-primary ring-offset-2 ring-offset-background scale-105"
-              : "opacity-70 hover:opacity-100"
+              ? "border-primary bg-primary/10 scale-105"
+              : "border-border bg-card opacity-70 hover:opacity-100"
           )}
         >
-          <span className="text-4xl">{mood.emoji}</span>
-          <span className="text-xs font-medium text-foreground">{mood.label}</span>
+          <span className="text-3xl">{mood.emoji}</span>
+          <span className="text-xs font-medium">{mood.label}</span>
         </button>
       ))}
     </div>
