@@ -21,6 +21,31 @@ interface MoodEntry {
   created_at: string;
 }
 
+const POSITIVE_PHRASES: Record<string, string[]> = {
+  very_happy: [
+    "You're radiating joy! Keep spreading that positivity! ✨",
+    "What an amazing mood — you're on top of the world! 🌟",
+    "Your happiness is contagious! Keep shining! 🌈",
+    "Life is beautiful and so are you! 💛",
+    "You're thriving — celebrate this moment! 🎉",
+    "Pure sunshine energy! Keep this vibe going! ☀️",
+  ],
+  happy: [
+    "Great to see you're feeling good! Keep it up! 😊",
+    "Your positive energy is wonderful! 🌻",
+    "Happiness looks good on you! 💚",
+    "You're doing great — be proud of yourself! 🙌",
+    "What a lovely mood — savor this feeling! 🌸",
+    "Keep smiling — the world needs your light! 💫",
+  ],
+};
+
+function getRandomPhrase(mood: string): string | null {
+  const phrases = POSITIVE_PHRASES[mood];
+  if (!phrases) return null;
+  return phrases[Math.floor(Math.random() * phrases.length)];
+}
+
 export default function Mood() {
   const [entries, setEntries] = useState<MoodEntry[]>([]);
   const [selectedMood, setSelectedMood] = useState<MoodType | undefined>();
