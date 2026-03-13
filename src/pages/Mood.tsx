@@ -21,6 +21,31 @@ interface MoodEntry {
   created_at: string;
 }
 
+const POSITIVE_PHRASES: Record<string, string[]> = {
+  very_happy: [
+    "You're radiating joy! Keep spreading that positivity! ✨",
+    "What an amazing mood — you're on top of the world! 🌟",
+    "Your happiness is contagious! Keep shining! 🌈",
+    "Life is beautiful and so are you! 💛",
+    "You're thriving — celebrate this moment! 🎉",
+    "Pure sunshine energy! Keep this vibe going! ☀️",
+  ],
+  happy: [
+    "Great to see you're feeling good! Keep it up! 😊",
+    "Your positive energy is wonderful! 🌻",
+    "Happiness looks good on you! 💚",
+    "You're doing great — be proud of yourself! 🙌",
+    "What a lovely mood — savor this feeling! 🌸",
+    "Keep smiling — the world needs your light! 💫",
+  ],
+};
+
+function getRandomPhrase(mood: string): string | null {
+  const phrases = POSITIVE_PHRASES[mood];
+  if (!phrases) return null;
+  return phrases[Math.floor(Math.random() * phrases.length)];
+}
+
 export default function Mood() {
   const [entries, setEntries] = useState<MoodEntry[]>([]);
   const [selectedMood, setSelectedMood] = useState<MoodType | undefined>();
@@ -91,6 +116,13 @@ export default function Mood() {
     (e) => format(new Date(e.created_at), "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd")
   );
 
+  // Get recent happy entries from chat analysis
+  const recentHappyEntries = entries.filter(
+    (e) => (e.mood === "happy" || e.mood === "very_happy") && e.notes?.startsWith("Auto-detected from chat:")
+  );
+  const latestHappyMood = recentHappyEntries.length > 0 ? recentHappyEntries[0] : null;
+  const positivePhrase = latestHappyMood ? getRandomPhrase(latestHappyMood.mood) : null;
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -101,6 +133,21 @@ export default function Mood() {
             <h1 className="text-2xl font-bold">Mood Tracker</h1>
             <p className="text-sm text-muted-foreground">Track your emotions over time</p>
           </div>
+
+          {/* Positive Phrase Banner */}
+          {positivePhrase && (
+            <Card className="border-primary/30 bg-primary/5">
+              <CardContent className="py-4 px-5 flex items-center gap-3">
+                <span className="text-2xl">🌟</span>
+                <div>
+                  <p className="text-sm font-medium text-primary">{positivePhrase}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Based on your recent chat — keep the good vibes going!
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Log Mood */}
           <Card>
