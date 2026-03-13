@@ -134,6 +134,21 @@ export default function Mood() {
             <p className="text-sm text-muted-foreground">Track your emotions over time</p>
           </div>
 
+          {/* Positive Phrase Banner */}
+          {positivePhrase && (
+            <Card className="border-primary/30 bg-primary/5">
+              <CardContent className="py-4 px-5 flex items-center gap-3">
+                <span className="text-2xl">🌟</span>
+                <div>
+                  <p className="text-sm font-medium text-primary">{positivePhrase}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Based on your recent chat — keep the good vibes going!
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Log Mood */}
           <Card>
             <CardHeader>
