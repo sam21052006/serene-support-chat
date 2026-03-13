@@ -57,7 +57,10 @@ export function Navbar() {
             ))}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
+            <Button variant="ghost" size="sm" onClick={() => setDark(!dark)} aria-label="Toggle theme">
+              {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
             {user ? (
               <>
                 <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground">
