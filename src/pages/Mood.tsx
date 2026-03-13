@@ -116,6 +116,13 @@ export default function Mood() {
     (e) => format(new Date(e.created_at), "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd")
   );
 
+  // Get recent happy entries from chat analysis
+  const recentHappyEntries = entries.filter(
+    (e) => (e.mood === "happy" || e.mood === "very_happy") && e.notes?.startsWith("Auto-detected from chat:")
+  );
+  const latestHappyMood = recentHappyEntries.length > 0 ? recentHappyEntries[0] : null;
+  const positivePhrase = latestHappyMood ? getRandomPhrase(latestHappyMood.mood) : null;
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
