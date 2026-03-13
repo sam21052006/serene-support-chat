@@ -1,5 +1,6 @@
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Home, MessageCircle, BarChart3, LogOut, User } from "lucide-react";
+import { Home, MessageCircle, BarChart3, LogOut, User, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
@@ -7,6 +8,19 @@ import { cn } from "@/lib/utils";
 export function Navbar() {
   const location = useLocation();
   const { user, signOut } = useAuth();
+
+  const [dark, setDark] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("theme") === "dark" ||
+        (!localStorage.getItem("theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", dark);
+    localStorage.setItem("theme", dark ? "dark" : "light");
+  }, [dark]);
 
   const navItems = [
     { path: "/", label: "Home", icon: Home },
@@ -43,7 +57,10 @@ export function Navbar() {
             ))}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
+            <Button variant="ghost" size="sm" onClick={() => setDark(!dark)} aria-label="Toggle theme">
+              {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
             {user ? (
               <>
                 <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground">
