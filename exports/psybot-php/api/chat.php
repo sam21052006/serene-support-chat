@@ -167,6 +167,16 @@ function sendMessage() {
     // Check for crisis
     $isCrisis = detectCrisis($message);
     
+    // Detect mood from the message
+    $moodResult = detectMood($message);
+    $detectedMood = $moodResult['mood'];
+    $detectedWord = $moodResult['word'];
+    
+    // If mood was detected, save it automatically
+    if ($detectedMood !== null) {
+        saveMoodFromChat($userId, $detectedMood, $detectedWord);
+    }
+    
     // Save user message
     $stmt = $conn->prepare("INSERT INTO chat_messages (user_id, role, content, is_crisis_alert) VALUES (?, 'user', ?, ?)");
     $stmt->execute([$userId, $message, $isCrisis ? 1 : 0]);
@@ -187,10 +197,13 @@ function sendMessage() {
     $stmt = $conn->prepare("INSERT INTO chat_messages (user_id, role, content, is_crisis_alert) VALUES (?, 'assistant', ?, ?)");
     $stmt->execute([$userId, $aiResponse, $isCrisis ? 1 : 0]);
     
+    // Send back the response with mood info
     echo json_encode([
         'success' => true,
         'content' => $aiResponse,
-        'isCrisis' => $isCrisis
+        'isCrisis' => $isCrisis,
+        'detectedMood' => $detectedMood,
+        'detectedWord' => $detectedWord
     ]);
 }
 

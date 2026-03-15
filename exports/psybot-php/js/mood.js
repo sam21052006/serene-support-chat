@@ -90,15 +90,21 @@ async function loadMoodHistory() {
         const data = await response.json();
         
         if (data.entries && data.entries.length > 0) {
-            historyDiv.innerHTML = data.entries.map(entry => `
-                <div class="mood-entry">
-                    <div class="mood-entry-emoji">${getMoodEmoji(entry.mood)}</div>
-                    <div class="mood-entry-info">
-                        <div class="mood-entry-date">${formatDate(entry.created_at)} - ${getMoodLabel(entry.mood)}</div>
-                        ${entry.notes ? `<div class="mood-entry-notes">${entry.notes}</div>` : ''}
+            historyDiv.innerHTML = data.entries.map(entry => {
+                // Check if this entry was auto-detected from chat
+                const isFromChat = entry.notes && entry.notes.includes('Auto-detected from chat');
+
+                return `
+                    <div class="mood-entry">
+                        <div class="mood-entry-emoji">${getMoodEmoji(entry.mood)}</div>
+                        <div class="mood-entry-info">
+                            <div class="mood-entry-date">${formatDate(entry.created_at)} - ${getMoodLabel(entry.mood)}</div>
+                            ${entry.notes ? `<div class="mood-entry-notes">${entry.notes}</div>` : ''}
+                            ${isFromChat ? '<span class="mood-source-badge">💬 From Chat</span>' : ''}
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         } else {
             historyDiv.innerHTML = '<p class="loading">No mood entries yet. Start tracking your mood above!</p>';
         }
