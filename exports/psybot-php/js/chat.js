@@ -100,6 +100,11 @@ async function sendMessage(message) {
             if (data.isCrisis) {
                 document.getElementById('crisis-alert').style.display = 'flex';
             }
+            
+            // Show mood detection notification
+            if (data.detectedMood) {
+                showMoodNotification(data.detectedMood, data.detectedWord);
+            }
         }
     } catch (error) {
         removeLoadingIndicator(loadingId);
