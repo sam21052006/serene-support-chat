@@ -100,6 +100,11 @@ async function sendMessage(message) {
             if (data.isCrisis) {
                 document.getElementById('crisis-alert').style.display = 'flex';
             }
+            
+            // Show mood detection notification
+            if (data.detectedMood) {
+                showMoodNotification(data.detectedMood, data.detectedWord);
+            }
         }
     } catch (error) {
         removeLoadingIndicator(loadingId);
@@ -191,4 +196,45 @@ function removeLoadingIndicator(id) {
 function scrollToBottom() {
     const messagesArea = document.getElementById('messages');
     messagesArea.scrollTop = messagesArea.scrollHeight;
+}
+
+/**
+ * Show a small notification when mood is detected from chat
+ */
+function showMoodNotification(mood, word) {
+    // Get the emoji for the mood
+    const emojis = {
+        'very_sad': '😢',
+        'sad': '😔',
+        'neutral': '😐',
+        'happy': '😊',
+        'very_happy': '😄'
+    };
+    const labels = {
+        'very_sad': 'Very Sad',
+        'sad': 'Sad',
+        'neutral': 'Neutral',
+        'happy': 'Happy',
+        'very_happy': 'Very Happy'
+    };
+
+    const emoji = emojis[mood] || '😐';
+    const label = labels[mood] || 'Unknown';
+
+    // Create the notification box
+    const notification = document.createElement('div');
+    notification.className = 'mood-notification';
+    notification.innerHTML = `
+        ${emoji} Mood detected: <strong>${label}</strong> (from word: "${word}")
+        <br><small>Saved to your mood tracker automatically!</small>
+    `;
+
+    // Add it to the page
+    document.body.appendChild(notification);
+
+    // Remove it after 4 seconds
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        setTimeout(() => notification.remove(), 500);
+    }, 4000);
 }

@@ -781,6 +781,44 @@ h1, h2, h3 {
     padding: 2rem;
 }
 
+/* Mood Detection Notification */
+.mood-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--card);
+    border: 1px solid var(--primary);
+    border-left: 4px solid var(--primary);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow-lg);
+    font-size: 0.875rem;
+    z-index: 9999;
+    animation: slideInRight 0.3s ease;
+    transition: opacity 0.5s ease;
+}
+
+.mood-notification small {
+    color: var(--muted);
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(100px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* Chat-detected mood entry badge */
+.mood-source-badge {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    margin-top: 0.25rem;
+}
+
 /* Responsive */
 @media (max-width: 640px) {
     .hero-title {

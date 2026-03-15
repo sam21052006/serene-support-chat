@@ -56,6 +56,53 @@ function detectCrisis($message) {
 }
 
 /**
+ * Mood keywords - words that tell us how the user feels
+ */
+$MOOD_KEYWORDS = [
+    'very_happy' => ['amazing', 'fantastic', 'wonderful', 'excellent', 'thrilled', 'overjoyed', 'ecstatic', 'blessed', 'incredible', 'awesome'],
+    'happy' => ['happy', 'good', 'great', 'excited', 'glad', 'cheerful', 'joyful', 'pleased', 'grateful', 'thankful', 'better', 'positive', 'smile', 'love'],
+    'neutral' => ['okay', 'fine', 'alright', 'normal', 'so-so', 'meh', 'average', 'not bad'],
+    'sad' => ['sad', 'down', 'unhappy', 'low', 'upset', 'disappointed', 'lonely', 'tired', 'exhausted', 'worried', 'nervous', 'stressed', 'anxious'],
+    'very_sad' => ['terrible', 'awful', 'horrible', 'miserable', 'hopeless', 'devastated', 'depressed', 'heartbroken', 'worst', 'crying']
+];
+
+/**
+ * Detect mood from message
+ * Checks the message for mood keywords and returns the mood
+ */
+function detectMood($message) {
+    global $MOOD_KEYWORDS;
+    $lowerMessage = strtolower($message);
+    $detectedMood = null;
+    $detectedWord = null;
+
+    // Loop through each mood and its keywords
+    foreach ($MOOD_KEYWORDS as $mood => $keywords) {
+        foreach ($keywords as $word) {
+            // Check if the word is in the message
+            if (strpos($lowerMessage, $word) !== false) {
+                $detectedMood = $mood;
+                $detectedWord = $word;
+                break 2; // Stop both loops when we find a match
+            }
+        }
+    }
+
+    // Return mood and the word that matched
+    return ['mood' => $detectedMood, 'word' => $detectedWord];
+}
+
+/**
+ * Save mood entry automatically from chat
+ */
+function saveMoodFromChat($userId, $mood, $word) {
+    $conn = getConnection();
+    $notes = "Auto-detected from chat (keyword: " . $word . ")";
+    $stmt = $conn->prepare("INSERT INTO mood_entries (user_id, mood, notes) VALUES (?, ?, ?)");
+    $stmt->execute([$userId, $mood, $notes]);
+}
+
+/**
  * Get crisis response
  */
 function getCrisisResponse() {
@@ -120,6 +167,16 @@ function sendMessage() {
     // Check for crisis
     $isCrisis = detectCrisis($message);
     
+    // Detect mood from the message
+    $moodResult = detectMood($message);
+    $detectedMood = $moodResult['mood'];
+    $detectedWord = $moodResult['word'];
+    
+    // If mood was detected, save it automatically
+    if ($detectedMood !== null) {
+        saveMoodFromChat($userId, $detectedMood, $detectedWord);
+    }
+    
     // Save user message
     $stmt = $conn->prepare("INSERT INTO chat_messages (user_id, role, content, is_crisis_alert) VALUES (?, 'user', ?, ?)");
     $stmt->execute([$userId, $message, $isCrisis ? 1 : 0]);
@@ -140,10 +197,13 @@ function sendMessage() {
     $stmt = $conn->prepare("INSERT INTO chat_messages (user_id, role, content, is_crisis_alert) VALUES (?, 'assistant', ?, ?)");
     $stmt->execute([$userId, $aiResponse, $isCrisis ? 1 : 0]);
     
+    // Send back the response with mood info
     echo json_encode([
         'success' => true,
         'content' => $aiResponse,
-        'isCrisis' => $isCrisis
+        'isCrisis' => $isCrisis,
+        'detectedMood' => $detectedMood,
+        'detectedWord' => $detectedWord
     ]);
 }
 
